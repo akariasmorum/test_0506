@@ -21,10 +21,12 @@ def json_to_html_converter(json_list):
     if isinstance(json_list, list):
         for dic in json_list:
             html_block = ""
-            for key, title in dic.items():
+            for key, value in dic.items():
+                if isinstance(value, list):
+                    value = json_to_html_converter(value)
                 html_line = "<{key}>{title}</{key}>".format(
                     key   = key,
-                    title = title)
+                    title = value)
                 html_block += html_line
 
             html_block = "<li>{li_block}</li>".format(
@@ -45,9 +47,9 @@ def json_to_html_converter(json_list):
 
 
 def main():
-    js_text = read_input_json_file('test3_1.json')
+    js_text = read_input_json_file('test4.json')
     html_str = json_to_html_converter(js_text)
-    write_str_to_html_file(html_str, OUTPUT_HTML_FOLDER + '/' + '3_1.html')
+    write_str_to_html_file(html_str, OUTPUT_HTML_FOLDER + '/' + '4.html')
 
 if __name__ == '__main__':
     main()
