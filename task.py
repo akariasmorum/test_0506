@@ -1,4 +1,6 @@
+import cgi
 import json
+import re
 from collections import OrderedDict
 
 TEST_CASES_FOLDER = 'test_cases'
@@ -16,6 +18,26 @@ def write_str_to_html_file(html_string, file_name):
     return True
 
 
+def tag_converter(s):
+    tagpattern = "(^\w+)"
+    classpattern = "\.(\w+)"
+    idpattern = "\#(\w+)"
+
+    tag = re.findall(tagpattern, s)
+    classes = re.findall(classpattern, s)
+    tag_id = re.findall(idpattern, s)
+
+    classes_str = " ".join(c for c in classes)
+    id_str = " ".join(i for i in tag_id)
+    tag_stuff = ""
+    if classes_str != "":
+        tag_stuff += ' class="{0}"'.format(classes_str)
+    if id_str != "":
+        tag_stuff += ' id="{0}"'.format(id_str)
+
+    return {"tag": tag[0], "attributes": tag_stuff}
+
+
 def json_to_html_converter(json_list):
     html_str = ""
     if isinstance(json_list, list):
@@ -24,8 +46,14 @@ def json_to_html_converter(json_list):
             for key, value in dic.items():
                 if isinstance(value, list):
                     value = json_to_html_converter(value)
-                html_line = "<{key}>{title}</{key}>".format(
-                    key   = key,
+                elif isinstance(value, str):
+                    value = cgi.escape(value)
+
+                converted_tag = tag_converter(key)
+
+                html_line = "<{key} {attributes}>{title}</{key}>".format(
+                    key   = converted_tag['tag'],
+                    attributes = converted_tag['attributes'],
                     title = value)
                 html_block += html_line
 
@@ -47,9 +75,9 @@ def json_to_html_converter(json_list):
 
 
 def main():
-    js_text = read_input_json_file('test4.json')
+    js_text = read_input_json_file('test5.json')
     html_str = json_to_html_converter(js_text)
-    write_str_to_html_file(html_str, OUTPUT_HTML_FOLDER + '/' + '4.html')
+    write_str_to_html_file(html_str, OUTPUT_HTML_FOLDER + '/' + '5.html')
 
 if __name__ == '__main__':
     main()
