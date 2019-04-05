@@ -18,25 +18,32 @@ def write_str_to_html_file(html_string, file_name):
 
 def json_to_html_converter(json_list):
     html_str = ""
-    for dic in json_list:
+    if isinstance(json_list, list):
+        for dic in json_list:
+            html_block = ""
+            for key, title in dic.items():
+                html_line = "<{key}>{title}</{key}>".format(
+                    key   = key,
+                    title = title)
+                html_block += html_line
 
-        html_block = ""
-        for key, title in dic.items():
-            
-            html_line = "<{key}>{title}</{key}>".format(
-                key   = key,
-                title = title)
+            html_block = "<li>{li_block}</li>".format(
+                li_block = html_block)
+            html_str += html_block
 
-            html_block += html_line
-        html_str += html_block
+        html_str = "<ul>{ul_block}</ul>".format(
+            ul_block = html_str)
+
+    else:
+        raise  Exception('nothing to do here')        
 
     return html_str
 
 
 def main():
-    js_text = read_input_json_file('test2.json')
+    js_text = read_input_json_file('test3.json')
     html_str = json_to_html_converter(js_text)
-    write_str_to_html_file(html_str, OUTPUT_HTML_FOLDER + '/' + '2.html')
+    write_str_to_html_file(html_str, OUTPUT_HTML_FOLDER + '/' + '3.html')
 
 if __name__ == '__main__':
     main()
