@@ -35,15 +35,19 @@ def json_to_html_converter(json_list):
             ul_block = html_str)
 
     else:
-        raise  Exception('nothing to do here')        
+        for key, title in json_list.items():
+            html_line = "<{key}>{title}</{key}>".format(
+                key   = key,
+                title = title)
+            html_str += html_line
 
     return html_str
 
 
 def main():
-    js_text = read_input_json_file('test3.json')
+    js_text = read_input_json_file('test3_1.json')
     html_str = json_to_html_converter(js_text)
-    write_str_to_html_file(html_str, OUTPUT_HTML_FOLDER + '/' + '3.html')
+    write_str_to_html_file(html_str, OUTPUT_HTML_FOLDER + '/' + '3_1.html')
 
 if __name__ == '__main__':
     main()
