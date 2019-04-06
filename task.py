@@ -5,6 +5,8 @@ from collections import OrderedDict
 
 TEST_CASES_FOLDER = 'test_cases'
 OUTPUT_HTML_FOLDER = 'output_html'
+
+
 def read_input_json_file(file_name):
     with open(TEST_CASES_FOLDER + '/' + file_name, 'r') as f:
         text = f.read()
@@ -19,9 +21,11 @@ def write_str_to_html_file(html_string, file_name):
 
 
 def tag_converter(s):
+    #converts string of type "tag.class1.class2#idx"
+    #to <tag class="class1 class2" id="idx">
     tagpattern = "(^\w+)"
-    classpattern = "\.(\w+)"
-    idpattern = "\#(\w+)"
+    classpattern = "\.(\w+\-*\w*)"
+    idpattern = "\#(\w+\-*\w*)"
 
     tag = re.findall(tagpattern, s)
     classes = re.findall(classpattern, s)
